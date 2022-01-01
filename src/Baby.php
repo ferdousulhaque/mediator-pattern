@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Mediator;
 
-use App\Mediator\Enums\State;
+use App\Mediator\State;
 use App\Mediator\Observers\ObserverInterface;
 use SplObjectStorage;
 
@@ -26,6 +26,7 @@ class Baby
     public function __construct()
     {
         $this->observers = new SplObjectStorage;
+        $this->current_state = State::PLAYFUL;
         return $this;
     }
 
@@ -33,12 +34,12 @@ class Baby
      * Set the State
      *
      * @param State $state
-     * @return $this
+     * @return void
      */
-    public function setState(State $state): self
+    public function setState(State $state): void
     {
         $this->current_state = $state;
-        return $this;
+        $this->notifyAll();
     }
 
     /**

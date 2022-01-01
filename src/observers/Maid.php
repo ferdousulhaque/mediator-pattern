@@ -6,10 +6,15 @@ namespace App\Mediator\Observers;
 
 use App\Mediator\Baby;
 use App\Mediator\Observers\ObserverInterface;
-use App\Mediator\Enums\State;
+use App\Mediator\State;
 
 class Maid implements ObserverInterface
 {
+    /**
+     *
+     * @param Baby $baby
+     * @return void
+     */
     public function action(Baby $baby): void
     {
         if ($baby->getState() === State::POTTY) {
