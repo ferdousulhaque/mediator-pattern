@@ -1,0 +1,11 @@
+{
+    "name": "ferdous/mediator-pattern",
+    "description": "This is a basic implementation of mediator pattern with example",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "App\\Mediator\\": "src/"
+        }
+    },
+    "require": {}
+}
