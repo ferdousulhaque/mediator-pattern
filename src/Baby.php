@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace App\Mediator;
 
-use App\Mediator\State;
+use App\Mediator\BabyState;
 use App\Mediator\Observers\ObserverInterface;
 use SplObjectStorage;
 
 class Baby
 {
     /**
-     * @var State
+     * @var BabyState
      */
-    private State $current_state;
+    private BabyState $current_state;
 
     /**
      * @var SplObjectStorage
@@ -23,31 +23,35 @@ class Baby
     /**
      * 
      */
-    public function __construct()
+    public function __construct(private Mediator $mediator)
     {
         $this->observers = new SplObjectStorage;
-        $this->current_state = State::PLAYFUL;
         return $this;
     }
 
     /**
      * Set the State
      *
-     * @param State $state
+     * @param BabyState $state
      * @return void
      */
-    public function setState(State $state): void
+    public function setState(BabyState $state): void
     {
         $this->current_state = $state;
-        $this->notifyAll();
+
+        // Observer Pattern
+        // $this->notifyAll();
+
+        // Mediator Pattern
+        $this->sendToMediatorForAction();
     }
 
     /**
      * Get the State
      *
-     * @return State
+     * @return BabyState
      */
-    public function getState(): State
+    public function getState(): BabyState
     {
         return $this->current_state;
     }
@@ -59,7 +63,7 @@ class Baby
      * @param ObserverInterface $observer
      * @return $this
      */
-    public function attachObserver(ObserverInterface $observer)
+    public function attachObserver(ObserverInterface $observer): self
     {
         // $this->observers->init
         $this->observers->attach($observer);
@@ -73,7 +77,7 @@ class Baby
      * @param ObserverInterface $observer
      * @return $this
      */
-    public function detachObserver(ObserverInterface $observer)
+    public function detachObserver(ObserverInterface $observer): self
     {
         $this->observers->detach($observer);
         return $this;
@@ -84,10 +88,20 @@ class Baby
      *
      * @return void
      */
-    public function notifyAll()
+    public function notifyAll(): void
     {
         foreach ($this->observers as $observer) {
             $observer->action($this);
         }
+    }
+
+    /**
+     * Mediator to Dispatch the Action
+     *
+     * @return void
+     */
+    public function sendToMediatorForAction(): void
+    {
+        $this->mediator->dispatch($this->getState(), $this);
     }
 }
